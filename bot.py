@@ -1,8 +1,10 @@
-import interactions
+import discord
+from discord.ext import commands
 import math
 import os
 
-bot = interactions.Client(token=os.environ["DISCORD_TOKEN"])
+intents = discord.Intents.default()
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
@@ -16,23 +18,12 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     exp = round(exp_dm * multiplier)
     return exp
 
-@bot.command(
-    name="exp",
-    description="Oblicz exp dla graczy i DM-a",
-    options=[
-        interactions.SlashCommandOption(
-            name="poziomy",
-            description="Poziomy graczy oddzielone spacjami, np: 5 6 7",
-            type=interactions.OptionType.STRING,
-            required=True
-        )
-    ]
-)
-async def exp(ctx: interactions.SlashContext, poziomy: str):
+@bot.command(name="exp")
+async def exp(ctx, *poziomy):
     try:
-        poziomy_lista = list(map(int, poziomy.split()))
+        poziomy_lista = list(map(int, poziomy))
         if not poziomy_lista:
-            await ctx.send("Podaj poziomy graczy, np. `/exp poziomy: 5 6 8`")
+            await ctx.send("Podaj poziomy graczy, np. `!exp 5 6 8`")
             return
 
         exp_dm, srednia = licz_exp_dla_dm(poziomy_lista)
