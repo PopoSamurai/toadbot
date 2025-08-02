@@ -20,7 +20,7 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     name="exp",
     description="Oblicz exp dla graczy i DM-a",
     options=[
-        interactions.Option(
+        interactions.SlashCommandOption(
             name="poziomy",
             description="Poziomy graczy oddzielone spacjami, np: 5 6 7",
             type=interactions.OptionType.STRING,
@@ -28,7 +28,7 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
         )
     ]
 )
-async def exp(ctx: interactions.CommandContext, poziomy: str):
+async def exp(ctx: interactions.SlashContext, poziomy: str):
     try:
         poziomy_lista = list(map(int, poziomy.split()))
         if not poziomy_lista:
@@ -45,9 +45,4 @@ async def exp(ctx: interactions.CommandContext, poziomy: str):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(bot.start(os.getenv("DISCORD_TOKEN")))
-
 bot.run(os.getenv("DISCORD_TOKEN"))
-
