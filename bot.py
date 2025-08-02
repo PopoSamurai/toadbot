@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 import os
 import math
@@ -37,3 +36,4 @@ async def exp(ctx, *, poziomy):
         await ctx.send(f"Błąd: {e}")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
+
