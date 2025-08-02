@@ -1,4 +1,6 @@
+import discord
 python-dotenv
 
 flask
+
 
