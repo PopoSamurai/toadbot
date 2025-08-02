@@ -36,5 +36,6 @@ async def exp(ctx, *args):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
+import os
+bot.start()
 
-bot.run("MTQwMTIzMjk4MDAyMTc0MzY0Ng.GULEK-.M2xcnCKuw46P0uZLK4w2pIw12CMgrfx7xyOcJg")
