@@ -1,6 +1,9 @@
 services:
   - type: web
-    name: toadbot
-    env: python
-    buildCommand: ""
+    name: dnd-exp-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
     startCommand: python bot.py
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
