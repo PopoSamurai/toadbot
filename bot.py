@@ -1,10 +1,8 @@
-import discord
-from discord.ext import commands
+import interactions
 import math
+import os
 
-intents = discord.Intents.default()
-intents.message_content = True
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = interactions.Client(token=os.getenv("DISCORD_TOKEN"))
 
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
@@ -18,24 +16,33 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     exp = round(exp_dm * multiplier)
     return exp
 
-@bot.command()
-async def exp(ctx, *args):
+@bot.command(
+    name="exp",
+    description="Oblicza EXP dla graczy i DM na podstawie poziomów",
+    options=[
+        interactions.Option(
+            name="poziomy",
+            description="Poziomy graczy, np. 5 6 8",
+            type=interactions.OptionType.STRING,
+            required=True,
+        ),
+    ],
+)
+async def exp(ctx: interactions.CommandContext, poziomy: str):
     try:
-        poziomy = list(map(int, args))
-        if not poziomy:
-            await ctx.send("Podaj poziomy graczy, np. `!exp 5 6 8`")
+        poziomy_lista = list(map(int, poziomy.split()))
+        if not poziomy_lista:
+            await ctx.send("Podaj poziomy graczy, np. `/exp poziomy: 5 6 8`")
             return
 
-        exp_dm, srednia = licz_exp_dla_dm(poziomy)
+        exp_dm, srednia = licz_exp_dla_dm(poziomy_lista)
         wynik = f"📘 **DM EXP**: `{exp_dm}` _(dla średniego poziomu {srednia})_\n"
-        for i, lv in enumerate(poziomy, start=1):
-            exp = licz_exp_gracza(lv, srednia, exp_dm)
-            wynik += f"🎲 Gracz {i} (lv {lv}): `{exp}` EXP\n"
+        for i, lv in enumerate(poziomy_lista, start=1):
+            exp_gracza = licz_exp_gracza(lv, srednia, exp_dm)
+            wynik += f"🎲 Gracz {i} (lv {lv}): `{exp_gracza}` EXP\n"
 
         await ctx.send(wynik)
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
-import os
 bot.start()
-
