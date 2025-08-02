@@ -1,6 +1,7 @@
 services:
-  - type: worker
+  - type: web
     name: toadbot
     env: python
     buildCommand: ""
     startCommand: python bot.py
+    pythonVersion: 3.11
