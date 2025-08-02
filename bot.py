@@ -45,4 +45,9 @@ async def exp(ctx: interactions.CommandContext, poziomy: str):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
-bot.start()
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(bot.start(os.getenv("DISCORD_TOKEN")))
+
+bot.run(os.getenv("DISCORD_TOKEN"))
+
