@@ -2,7 +2,7 @@ import interactions
 import math
 import os
 
-bot = interactions.Client(token=os.getenv("DISCORD_TOKEN"))
+bot = interactions.Client(token=os.environ["DISCORD_TOKEN"])
 
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
@@ -18,15 +18,15 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
 
 @bot.command(
     name="exp",
-    description="Oblicza EXP dla graczy i DM na podstawie poziomów",
+    description="Oblicz exp dla graczy i DM-a",
     options=[
         interactions.Option(
             name="poziomy",
-            description="Poziomy graczy, np. 5 6 8",
+            description="Poziomy graczy oddzielone spacjami, np: 5 6 7",
             type=interactions.OptionType.STRING,
-            required=True,
-        ),
-    ],
+            required=True
+        )
+    ]
 )
 async def exp(ctx: interactions.CommandContext, poziomy: str):
     try:
