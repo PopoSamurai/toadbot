@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
-import os
 import math
+import os
 
 intents = discord.Intents.default()
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
@@ -19,9 +19,9 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     return exp
 
 @bot.command()
-async def exp(ctx, *, poziomy):
+async def exp(ctx, *poziomy):
     try:
-        poziomy_lista = list(map(int, poziomy.split()))
+        poziomy_lista = list(map(int, poziomy))
         if not poziomy_lista:
             await ctx.send("Podaj poziomy graczy, np. `!exp 5 6 8`")
             return
@@ -36,5 +36,5 @@ async def exp(ctx, *, poziomy):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
-bot.run(os.getenv("DISCORD_TOKEN"))
-
+TOKEN = os.getenv("DISCORD_TOKEN")
+bot.run(TOKEN)
