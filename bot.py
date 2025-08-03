@@ -3,6 +3,7 @@ import math
 import os
 from dotenv import load_dotenv
 import interactions
+from discord_slash import SlashCommand
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
@@ -62,5 +63,6 @@ async def exp(ctx: interactions.CommandContext, poziomy: str):
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
+
 
 
