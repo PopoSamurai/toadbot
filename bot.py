@@ -2,9 +2,9 @@ import os
 import math
 import interactions
 from dotenv import load_dotenv
-
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+print(f"TOKEN: {TOKEN}")
 
 bot = interactions.Client(token=TOKEN)
 
@@ -63,3 +63,4 @@ async def exp(ctx, poziomy: str):
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
+
