@@ -8,7 +8,6 @@ load_dotenv(dotenv_path="klucz.env")
 token = os.getenv("DISCORD_TOKEN")
 
 bot = interactions.Client(token=token)
-
 # Komenda ping
 @interactions.slash_command(
     name="ping",
@@ -64,5 +63,6 @@ async def exp(ctx, poziomy: str):
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
+
 
 
