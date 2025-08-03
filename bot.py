@@ -1,68 +1,34 @@
-import os
-import math
 import interactions
 import os
-from dotenv import load_dotenv
 
-load_dotenv(dotenv_path="klucz.env")
+# Upewniamy się, że token jest zaciągany z systemowego środowiska
 token = os.getenv("DISCORD_TOKEN")
+if not token:
+    raise ValueError("Brak DISCORD_TOKEN w środowisku!")
 
 bot = interactions.Client(token=token)
-# Komenda ping
-@interactions.slash_command(
-    name="ping",
-    description="Odpowiada pong!"
-)
-async def ping(ctx):
-    await ctx.send("🏓 Pong!")
 
-# Funkcje kalkulacji EXP
-def licz_exp_dla_dm(levels, sesje=1):
-    sredni_poziom = sum(levels) / len(levels)
-    exp_dm = (-3702.80688 + 120.71911 * math.exp(((sredni_poziom + 39.19238) / 11.64262))) * sesje
-    return round(exp_dm), round(sredni_poziom, 2)
 
-def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
-    mod = level_gracza - level_sredni
-    reduction = -0.0125 * (mod ** 2 + 1)
-    multiplier = 1.0125 + reduction
-    exp = round(exp_dm * multiplier)
-    return exp
-
-# Komenda exp z parametrem "poziomy"
-@interactions.slash_command(
+# Komenda kalkulatora exp (przykładowa)
+@bot.command(
     name="exp",
-    description="Oblicz exp dla graczy i DM-a",
+    description="Oblicza exp potrzebny do poziomu",
     options=[
-        interactions.SlashCommandOption(
-            name="poziomy",
-            description="Poziomy graczy oddzielone spacjami, np: 5 6 7",
-            type=interactions.OptionType.STRING,
+        interactions.Option(
+            name="poziom",
+            description="Poziom docelowy",
+            type=interactions.OptionType.INTEGER,
             required=True,
-        ),
-    ]
+        )
+    ],
 )
-async def exp(ctx, poziomy: str):
-    try:
-        poziomy_lista = list(map(int, poziomy.split()))
-        if not poziomy_lista:
-            await ctx.send("Podaj poziomy graczy, np. `/exp poziomy: 5 6 8`")
-            return
-
-        exp_dm, srednia = licz_exp_dla_dm(poziomy_lista)
-        wynik = f"📘 **DM EXP**: `{exp_dm}` _(dla średniego poziomu {srednia})_\n"
-        for i, lv in enumerate(poziomy_lista, start=1):
-            exp_gracza = licz_exp_gracza(lv, srednia, exp_dm)
-            wynik += f"🎲 Gracz {i} (lv {lv}): `{exp_gracza}` EXP\n"
-
-        await ctx.send(wynik)
-    except Exception as e:
-        await ctx.send(f"Błąd: {e}")
-
-# Uruchomienie
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(bot.start())
+async def exp(ctx: interactions.CommandContext, poziom: int):
+    # Przykład prostego wzoru
+    if poziom < 1:
+        await ctx.send("Poziom musi być większy niż 0!")
+        return
+    exp = sum([i * 100 for i in range(1, poziom + 1)])
+    await ctx.send(f"Aby osiągnąć poziom {poziom}, potrzebujesz {exp} punktów doświadczenia.")
 
 
-
+bot.start()
