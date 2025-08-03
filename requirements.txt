@@ -1,3 +1,4 @@
-discord.py-cord==2.5.0
+py-cord==2.5.0
 python-dotenv
 flask
+
