@@ -1,5 +1,2 @@
-discord-py-interactions.py
+interactions.py
 python-dotenv
-flask
-
-
