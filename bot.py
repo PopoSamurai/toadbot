@@ -1,54 +1,38 @@
-import math
 import os
+import math
 from dotenv import load_dotenv
-from interactions import (
-    Client, CommandContext, Intents, OptionType,
-    slash_command, SlashCommandOption
-)
+from interactions import Client, CommandContext, slash_command, OptionType, option
 
-# Wczytanie .env
 load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
+token = os.getenv("DISCORD_TOKEN")
 
-# Konfiguracja klienta
-bot = Client(token=TOKEN, intents=Intents.DEFAULT)
+bot = Client(token=token)
 
-# 🔔 Komenda testowa
-@slash_command(
-    name="ping",
-    description="Responds with pong!"
-)
-async def ping(ctx: CommandContext):
-    await ctx.send("Pong!")
-
-# 🔢 Funkcja DM EXP
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
     exp_dm = (-3702.80688 + 120.71911 * math.exp(((sredni_poziom + 39.19238) / 11.64262))) * sesje
     return round(exp_dm), round(sredni_poziom, 2)
 
-# 🔢 Funkcja gracz EXP
 def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     mod = level_gracza - level_sredni
     reduction = -0.0125 * (mod ** 2 + 1)
     multiplier = 1.0125 + reduction
-    exp = round(exp_dm * multiplier)
-    return exp
+    return round(exp_dm * multiplier)
 
-# 📘 Slash command do EXP
-@slash_command(
-    name="exp",
-    description="Oblicz exp dla graczy i DM-a",
-    options=[
-        SlashCommandOption(
-            name="poziomy",
-            description="Poziomy graczy oddzielone spacjami, np: 5 6 7",
-            type=OptionType.STRING,
-            required=True
-        )
-    ]
-)
-async def exp(ctx: CommandContext, poziomy: str):
+@slash_command(name="ping", description="Sprawdza czy bot działa")
+async def ping(ctx: CommandContext):
+    await ctx.send("Pong!")
+
+@slash_command(name="exp", description="Oblicz exp dla graczy i DM-a")
+@option()
+async def exp(
+    ctx: CommandContext,
+    poziomy: str = option(
+        description="Poziomy graczy oddzielone spacjami, np: 5 6 7",
+        required=True,
+        opt_type=OptionType.STRING,
+    )
+):
     try:
         poziomy_lista = list(map(int, poziomy.split()))
         if not poziomy_lista:
@@ -65,5 +49,4 @@ async def exp(ctx: CommandContext, poziomy: str):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
-# 🔁 Start bota
 bot.start()
