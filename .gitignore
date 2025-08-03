@@ -70,3 +70,10 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+# Ignoruj pliki z tokenami
+.env
+klucz.env
+
+# Inne rzeczy:
+__pycache__/
+*.pyc
