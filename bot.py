@@ -1,8 +1,12 @@
 import interactions
 import math
 import os
+from dotenv import load_dotenv
 
-bot = interactions.Client(token=os.environ["DISCORD_TOKEN"])
+load_dotenv()
+token = os.getenv("DISCORD_TOKEN")
+
+bot.start(token)
 
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
@@ -48,3 +52,4 @@ async def exp(ctx: interactions.CommandContext, poziomy: str):
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
+
