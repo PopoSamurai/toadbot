@@ -1,11 +1,13 @@
 import interactions
 import math
 import os
+from interactions import Client, CommandContext, slash_command
 from dotenv import load_dotenv
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
 
+bot = Client()
 bot.start(token)
 
 def licz_exp_dla_dm(levels, sesje=1):
