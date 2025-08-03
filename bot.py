@@ -1,29 +1,30 @@
-import interactions
-import math
 import os
-from dotenv import load_dotenv
+import math
 import interactions
-from discord_slash import SlashCommand
+from dotenv import load_dotenv
 
+# Załaduj .env i pobierz token
 load_dotenv()
-token = os.getenv("DISCORD_TOKEN")
+TOKEN = os.getenv("DISCORD_TOKEN")
 
-bot = interactions.Client(token=token)
+# Inicjalizacja bota
+bot = interactions.Client(token=TOKEN)
 
+# Komenda testowa
 @bot.command(
     name="ping",
-    description="Responds with pong!"
+    description="Odpowiada pong!"
 )
 async def ping(ctx: interactions.CommandContext):
-    await ctx.send("Pong!")
+    await ctx.send("🏓 Pong!")
 
-bot.start()
-
+# Funkcja liczenia EXP dla DM
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
     exp_dm = (-3702.80688 + 120.71911 * math.exp(((sredni_poziom + 39.19238) / 11.64262))) * sesje
     return round(exp_dm), round(sredni_poziom, 2)
 
+# Funkcja liczenia EXP dla gracza
 def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     mod = level_gracza - level_sredni
     reduction = -0.0125 * (mod ** 2 + 1)
@@ -31,6 +32,7 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     exp = round(exp_dm * multiplier)
     return exp
 
+# Komenda /exp
 @bot.command(
     name="exp",
     description="Oblicz exp dla graczy i DM-a",
@@ -60,6 +62,7 @@ async def exp(ctx: interactions.CommandContext, poziomy: str):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
+# Start bota
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
