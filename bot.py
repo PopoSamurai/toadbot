@@ -3,10 +3,11 @@ import math
 import interactions
 from dotenv import load_dotenv
 
-# Załaduj token z .env
+# Wczytaj zmienne środowiskowe z .env
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
+# Inicjalizacja klienta
 bot = interactions.Client(token=TOKEN)
 
 # Komenda ping
@@ -17,7 +18,7 @@ bot = interactions.Client(token=TOKEN)
 async def ping(ctx):
     await ctx.send("🏓 Pong!")
 
-# Obliczanie EXP
+# Funkcje kalkulatora EXP
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
     exp_dm = (-3702.80688 + 120.71911 * math.exp(((sredni_poziom + 39.19238) / 11.64262))) * sesje
@@ -58,7 +59,7 @@ async def exp(ctx, poziomy: str):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
-# Start bota
+# Uruchomienie bota
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
