@@ -1,14 +1,22 @@
 import interactions
 import math
 import os
-from interactions import Client, CommandContext, slash_command
 from dotenv import load_dotenv
+import interactions
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
 
-bot = Client()
-bot.start(token)
+bot = interactions.Client(token=token)
+
+@bot.command(
+    name="ping",
+    description="Responds with pong!"
+)
+async def ping(ctx: interactions.CommandContext):
+    await ctx.send("Pong!")
+
+bot.start()
 
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
@@ -54,4 +62,5 @@ async def exp(ctx: interactions.CommandContext, poziomy: str):
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
+
 
