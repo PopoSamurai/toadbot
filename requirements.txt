@@ -1,4 +1,5 @@
-discord-py-interactions.py==5.13.4
+discord-py-interactions.py
 python-dotenv
 flask
+
 
