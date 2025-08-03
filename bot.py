@@ -3,11 +3,9 @@ import math
 import interactions
 from dotenv import load_dotenv
 
-# Wczytaj zmienne środowiskowe z .env
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-# Inicjalizacja klienta
 bot = interactions.Client(token=TOKEN)
 
 # Komenda ping
@@ -18,7 +16,7 @@ bot = interactions.Client(token=TOKEN)
 async def ping(ctx):
     await ctx.send("🏓 Pong!")
 
-# Funkcje kalkulatora EXP
+# Funkcje kalkulacji EXP
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
     exp_dm = (-3702.80688 + 120.71911 * math.exp(((sredni_poziom + 39.19238) / 11.64262))) * sesje
@@ -31,16 +29,18 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     exp = round(exp_dm * multiplier)
     return exp
 
-# Komenda exp
+# Komenda exp z parametrem "poziomy"
 @interactions.slash_command(
     name="exp",
-    description="Oblicz exp dla graczy i DM-a"
-)
-@interactions.option(
-    name="poziomy",
-    description="Poziomy graczy oddzielone spacjami, np: 5 6 7",
-    type=interactions.OptionType.STRING,
-    required=True
+    description="Oblicz exp dla graczy i DM-a",
+    options=[
+        interactions.SlashCommandOption(
+            name="poziomy",
+            description="Poziomy graczy oddzielone spacjami, np: 5 6 7",
+            type=interactions.OptionType.STRING,
+            required=True,
+        ),
+    ]
 )
 async def exp(ctx, poziomy: str):
     try:
@@ -59,7 +59,7 @@ async def exp(ctx, poziomy: str):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
-# Uruchomienie bota
+# Uruchomienie
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
