@@ -3,28 +3,26 @@ import math
 import interactions
 from dotenv import load_dotenv
 
-# Wczytaj token z pliku .env
+# Załaduj token z .env
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-# Inicjalizacja klienta bota
 bot = interactions.Client(token=TOKEN)
 
-# Ping
+# Komenda ping
 @interactions.slash_command(
     name="ping",
     description="Odpowiada pong!"
 )
-async def ping(ctx: interactions.CommandContext):
+async def ping(ctx):
     await ctx.send("🏓 Pong!")
 
-# Funkcja EXP dla DM
+# Obliczanie EXP
 def licz_exp_dla_dm(levels, sesje=1):
     sredni_poziom = sum(levels) / len(levels)
     exp_dm = (-3702.80688 + 120.71911 * math.exp(((sredni_poziom + 39.19238) / 11.64262))) * sesje
     return round(exp_dm), round(sredni_poziom, 2)
 
-# Funkcja EXP dla gracza
 def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     mod = level_gracza - level_sredni
     reduction = -0.0125 * (mod ** 2 + 1)
@@ -32,7 +30,7 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     exp = round(exp_dm * multiplier)
     return exp
 
-# Slash command /exp
+# Komenda exp
 @interactions.slash_command(
     name="exp",
     description="Oblicz exp dla graczy i DM-a"
@@ -43,7 +41,7 @@ def licz_exp_gracza(level_gracza, level_sredni, exp_dm):
     type=interactions.OptionType.STRING,
     required=True
 )
-async def exp(ctx: interactions.CommandContext, poziomy: str):
+async def exp(ctx, poziomy: str):
     try:
         poziomy_lista = list(map(int, poziomy.split()))
         if not poziomy_lista:
@@ -60,11 +58,7 @@ async def exp(ctx: interactions.CommandContext, poziomy: str):
     except Exception as e:
         await ctx.send(f"Błąd: {e}")
 
-# Uruchom bota
+# Start bota
 if __name__ == "__main__":
     import asyncio
     asyncio.run(bot.start())
-
-
-
-
